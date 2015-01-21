@@ -1,0 +1,5 @@
+Import('env')
+
+env.Install(env['INCDIR'], Glob('include/*.h'))
+env.SConscript('lib/SConscript')
+env.SConscript('test/SConscript')

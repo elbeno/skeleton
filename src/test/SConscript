@@ -1,0 +1,5 @@
+Import('env')
+
+name = env['PROJNAME'] + '_test'
+env.Program(name, Glob('*.cpp'), LIBS=[env['PROJNAME']])
+env.Install(env['BINDIR'], name)
