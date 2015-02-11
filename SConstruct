@@ -14,9 +14,35 @@ env = Environment(BUILDTYPE = buildType,
                   LIBPATH = [lib])
 
 env.Append(CCFLAGS = "-g -std=c++1y")
-env.Append(CCFLAGS = "-stdlib=libc++")
-env.Append(LINKFLAGS = "-lc++")
-env.Replace(CXX = 'clang++')
+env.Append(CCFLAGS = ["-pedantic"
+                      , "-Wall"
+                      , "-Wextra"
+                      , "-Wcast-align"
+                      , "-Wcast-qual"
+                      , "-Wctor-dtor-privacy"
+                      , "-Wdisabled-optimization"
+                      , "-Wformat=2"
+                      , "-Winit-self"
+                      , "-Wmissing-include-dirs"
+                      , "-Wold-style-cast"
+                      , "-Woverloaded-virtual"
+                      , "-Wredundant-decls"
+                      , "-Wshadow"
+                      , "-Wsign-conversion"
+                      , "-Wsign-promo"
+                      , "-Wstrict-overflow=5"
+                      , "-Wswitch-default"
+                      , "-Wundef"
+                      , "-Werror"
+                      , "-Wno-unused"])
+
+compiler = 'clang++'
+#compiler = 'g++'
+
+if compiler == 'clang++':
+    env.Append(CCFLAGS = "-stdlib=libc++")
+    env.Append(LINKFLAGS = "-lc++")
+    env.Replace(CXX = compiler)
 
 env['PROJNAME'] = os.path.basename(Dir('.').srcnode().abspath)
 print env['PROJNAME']
