@@ -39,7 +39,7 @@ env.Append(CCFLAGS = ["-pedantic"
 compiler = 'clang++'
 #compiler = 'g++'
 
-if compiler == 'clang++':
+if compiler[:5] == 'clang':
     env.Append(CCFLAGS = "-stdlib=libc++")
     env.Append(LINKFLAGS = "-lc++")
     env.Replace(CXX = compiler)
