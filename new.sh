@@ -16,6 +16,7 @@ cd ../$1
 ./clean.sh
 rm -rf .git
 rm new.sh
+sed -i "s/(skeleton)/($1)/" ./CMakeLists.txt
 git init .
 git commit --allow-empty -m "Initial commit"
 echo 'You have an empty git repo here. Now run header-only.sh if you want to get rid of the default lib in the project. Happy hacking!'
