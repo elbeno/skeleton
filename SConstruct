@@ -2,14 +2,10 @@ import os
 
 buildType = 'debug'
 
-include = '#export/$BUILDTYPE/include'
-lib = '#export/$BUILDTYPE/lib'
-bin = '#export/$BUILDTYPE/bin'
+include = '#build/$BUILDTYPE/include'
+lib = '#build/$BUILDTYPE/lib'
 
 env = Environment(BUILDTYPE = buildType,
-                  INCDIR = include,
-                  LIBDIR = lib,
-                  BINDIR = bin,
                   CPPPATH = [include],
                   LIBPATH = [lib])
 
@@ -33,8 +29,7 @@ env.Append(CCFLAGS = ["-pedantic"
                       , "-Wstrict-overflow=5"
                       , "-Wswitch-default"
                       , "-Wundef"
-                      , "-Werror"
-                      , "-Wno-unused"])
+                      , "-Werror"])
 
 compiler = 'clang++'
 #compiler = 'g++'
