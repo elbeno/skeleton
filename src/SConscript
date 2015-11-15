@@ -1,4 +1,0 @@
-Import('env')
-
-env.SConscript('lib/SConscript')
-env.SConscript('test/SConscript')

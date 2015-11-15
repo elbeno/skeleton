@@ -4,6 +4,7 @@ include_directories ("${PROJECT_SOURCE_DIR}/src/include")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(MY_CXX_FLAGS "-pedantic \
+-ffunction-sections \
 -Wall \
 -Wextra \
 -Wcast-align \
@@ -51,4 +52,6 @@ else ()
 endif ()
 
 add_subdirectory (src/lib)
+
+enable_testing ()
 add_subdirectory (src/test)

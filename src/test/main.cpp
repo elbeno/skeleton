@@ -2,7 +2,10 @@
 
 using namespace std;
 
+extern int dummy();
+
 int main(int, char* [])
 {
-  cout << "Hello, world!" << endl;
+  cout << dummy() << endl;
+  return 0;
 }
