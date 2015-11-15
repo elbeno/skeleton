@@ -1,11 +1,12 @@
+#include <dummy.h>
+
 #include <iostream>
 
 using namespace std;
 
-extern int dummy();
-
 int main(int, char* [])
 {
-  cout << dummy() << endl;
+  cout << "Hello, world" << endl;
+  dummy();
   return 0;
 }

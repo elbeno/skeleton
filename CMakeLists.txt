@@ -3,55 +3,43 @@ project (skeleton)
 include_directories ("${PROJECT_SOURCE_DIR}/src/include")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(MY_CXX_FLAGS "-pedantic \
--ffunction-sections \
--Wall \
--Wextra \
--Wcast-align \
--Wcast-qual \
--Wctor-dtor-privacy \
--Wdisabled-optimization \
--Wformat=2 \
--Winit-self \
--Wmissing-include-dirs \
--Wold-style-cast \
--Woverloaded-virtual \
--Wredundant-decls \
--Wshadow \
--Wsign-conversion \
--Wsign-promo \
--Wstrict-overflow=5 \
--Wswitch-default \
--Wundef \
--Werror")
+# Default C++ standard: C++14
+if(CXX_STD)
+else()
+  set(CXX_STD 14)
+endif()
 
-option(USE_CLANG "build application with clang" ON)
+# Set up tests
+enable_testing()
+include(CTest)
 
-if (USE_CLANG)
-    SET (CMAKE_C_COMPILER             "/usr/bin/clang")
-    SET (CMAKE_C_FLAGS                "-Wall -std=c99")
-    SET (CMAKE_C_FLAGS_DEBUG          "-g")
-    SET (CMAKE_C_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
-    SET (CMAKE_C_FLAGS_RELEASE        "-O4 -DNDEBUG")
-    SET (CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
+include_directories(src/include)
 
-    SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
-    SET (CMAKE_CXX_FLAGS    "${MY_CXX_FLAGS} -std=c++1y -stdlib=libc++")
-    SET (CMAKE_CXX_FLAGS_DEBUG          "-g")
-    SET (CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
-    SET (CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")
-    SET (CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
+# Compile flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CXX_STD} -ftemplate-backtrace-limit=0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffunction-sections")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -pedantic-errors")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wcast-align -Wcast-qual -Wold-style-cast")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wctor-dtor-privacy")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wdisabled-optimization")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Winit-self")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-include-dirs")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wredundant-decls")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsign-conversion -Wsign-promo")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wstrict-overflow=5")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wswitch-default")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wundef")
 
-    SET (CMAKE_AR      "/usr/bin/llvm-ar")
-    SET (CMAKE_LINKER  "/usr/bin/llvm-ld")
-    SET (CMAKE_NM      "/usr/bin/llvm-nm")
-    SET (CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
-    SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
-else ()
-    SET (CMAKE_CXX_FLAGS    "${MY_CXX_FLAGS} -std=c++1y")
-endif ()
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
+set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG")
 
-add_subdirectory (src/lib)
+# Clang/GCC specifics
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+endif()
 
-enable_testing ()
-add_subdirectory (src/test)
+add_subdirectory(src/lib)
+add_subdirectory(src/test)
