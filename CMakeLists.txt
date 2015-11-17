@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 2.8)
 project (skeleton)
+
 include_directories ("${PROJECT_SOURCE_DIR}/src/include")
+include_directories ("${PROJECT_SOURCE_DIR}/contrib/testinator/src/include")
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Default C++ standard: C++14

@@ -1,0 +1,3 @@
+[submodule "contrib/testinator"]
+	path = contrib/testinator
+	url = git@github.com:elbeno/testinator.git

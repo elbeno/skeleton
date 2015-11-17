@@ -1,12 +1,9 @@
 #include <dummy.h>
 
-#include <iostream>
+#define TESTINATOR_MAIN
+#include <testinator.h>
 
-using namespace std;
-
-int main(int, char* [])
+DEF_TEST(Name, Suite)
 {
-  cout << "Hello, world" << endl;
-  dummy();
-  return 0;
+  return true;
 }
