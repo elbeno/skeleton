@@ -33,6 +33,19 @@ matrix:
       os: linux
       addons: *gcc49
 
+    - env: GCC_VERSION=5 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=Off
+      os: linux
+      addons: &gcc5
+        apt:
+          packages:
+            - g++-5
+          sources:
+            - ubuntu-toolchain-r-test
+
+    - env: GCC_VERSION=5 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=Off
+      os: linux
+      addons: *gcc5
+
 before_install:
   - export CHECKOUT_PATH=`pwd`;
   - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
