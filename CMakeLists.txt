@@ -1,8 +1,12 @@
 cmake_minimum_required (VERSION 2.8)
 project (skeleton)
 
+# Includes for this project
 include_directories ("${PROJECT_SOURCE_DIR}/src/include")
+
+# Include testinator and the GSL
 include_directories ("${PROJECT_SOURCE_DIR}/contrib/testinator/src/include")
+include_directories ("${PROJECT_SOURCE_DIR}/contrib/gsl/include")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -16,13 +20,12 @@ endif()
 enable_testing()
 include(CTest)
 
-include_directories(src/include)
-
 # Compile flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CXX_STD} -ftemplate-backtrace-limit=0")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffunction-sections")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -pedantic-errors")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wcast-align -Wcast-qual -Wold-style-cast")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wcast-align")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wcast-qual")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wctor-dtor-privacy")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wdisabled-optimization")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=2")
@@ -30,11 +33,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Winit-self")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-include-dirs")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wredundant-decls")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsign-conversion -Wsign-promo")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsign-promo")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wstrict-overflow=5")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wswitch-default")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wundef")
+
+# The GSL violates these warnings
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wold-style-cast")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsign-conversion")
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
 set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG")
