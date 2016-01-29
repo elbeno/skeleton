@@ -20,7 +20,7 @@ build_script:
   - echo %configuration%
 
   # generate a solution file
-  - cd c:\projects\testinator
+  - cd c:\projects\skeleton
   - mkdir build
   - cd build
   - if "%platform%" == "x64" set cmake_platform=%platform%
@@ -29,7 +29,7 @@ build_script:
   # build it
   - if "%platform%" == "x86" set msbuild_platform=Win32
   - if "%platform%" == "x64" set msbuild_platform=%platform%
-  - msbuild testinator.sln /p:Configuration=%configuration% /toolsversion:14.0 /p:PlatformToolset=v140 /p:Platform=%msbuild_platform%
+  - msbuild skeleton.sln /p:Configuration=%configuration% /toolsversion:14.0 /p:PlatformToolset=v140 /p:Platform=%msbuild_platform%
 
 test_script:
   - if "%configuration%" == "Debug" ctest -VV

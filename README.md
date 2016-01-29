@@ -14,5 +14,6 @@ Happy hacking!
 
 ### Status
 [![Build Status](https://travis-ci.org/elbeno/skeleton.svg?branch=master)](https://travis-ci.org/elbeno/skeleton)
+[![Build status](https://ci.appveyor.com/api/projects/status/7p8bv168t7nfil5v/branch/master?svg=true)](https://ci.appveyor.com/project/elbeno/skeleton/branch/master)
 
 Skeleton is distributed under some license. See LICENSE for details.
