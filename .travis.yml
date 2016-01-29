@@ -2,11 +2,25 @@
 
 language: cpp
 script: cmake
-sudo: false
 
 matrix:
   include:
-    - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug CPP=14 ASAN=On LIBCXX=Off
+    - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug CPP=1y ASAN=On LIBCXX=On
+      os: linux
+      addons: &clang34
+        apt:
+          packages:
+            - util-linux
+            - clang-3.4
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.4
+
+    - env: CLANG_VERSION=3.4 BUILD_TYPE=Release CPP=1y ASAN=On LIBCXX=On
+      os: linux
+      addons: *clang34
+
+    - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=On
       os: linux
       addons: &clang37
         apt:
@@ -17,7 +31,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
 
-    - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=Off
+    - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=On
       os: linux
       addons: *clang37
 
@@ -52,9 +66,6 @@ before_install:
   - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
   - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
   - if [ "$CLANG_VERSION" == "3.4" ]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
-  - which $CXX
-  - which $CC
-  # - if [ -n "$CLANG_VERSION" ]; then sudo CXX=$CXX CC=$CC ./install_libcxx.sh; fi
   - if [ "$LIBCXX" == "On" ]; then sudo CXX=$CXX CC=$CC ./install_libcxx.sh; fi
 
 install:
@@ -66,15 +77,18 @@ install:
   - export CXX_FLAGS=""
   - export CXX_LINKER_FLAGS=""
 
-  - if [ -z "$BUILD_TYPE" ]; then export BUILD_TYPE=Release; fi
+  - if [ -z "$BUILD_TYPE" ]; then export BUILD_TYPE=Debug; fi
 
-  - if [ "$ASAN" == "On"]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
+  - if [ "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
   - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
 
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DCXX_STD=$CPP
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DCXX_STD=$CPP -DCI_BUILD=1
   - make VERBOSE=1
 
 script:
-  - ctest -VV
+  - if [ "$BUILD_TYPE" == "Debug" ]; then ctest -VV; fi
+
+notifications:
+  email: false

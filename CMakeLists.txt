@@ -20,36 +20,52 @@ endif()
 enable_testing()
 include(CTest)
 
-# Compile flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CXX_STD} -ftemplate-backtrace-limit=0")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffunction-sections")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -pedantic-errors")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wcast-align")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wcast-qual")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wctor-dtor-privacy")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wdisabled-optimization")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=2")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Winit-self")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-include-dirs")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wredundant-decls")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsign-promo")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wstrict-overflow=5")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wswitch-default")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wundef")
+if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  set(MY_CXX_FLAGS_LIST
+    )
+  string(REPLACE ";" " " MY_CXX_FLAGS "${MY_CXX_FLAGS_LIST}")
 
-# The GSL violates these warnings
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wold-style-cast")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsign-conversion")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MY_CXX_FLAGS}")
+else()
+  set(MY_CXX_FLAGS_LIST
+    -ftemplate-backtrace-limit=0
+    -ffunction-sections
+    -Wall -Wextra -Werror -pedantic-errors
+    -Wcast-align
+    -Wcast-qual
+    -Wctor-dtor-privacy
+    -Wdisabled-optimization
+    -Wformat=2
+    -Winit-self
+    -Wmissing-include-dirs
+    # -Wold-style-cast
+    -Woverloaded-virtual
+    -Wredundant-decls
+    # -Wshadow
+    # -Wsign-conversion
+    -Wsign-promo
+    -Wstrict-overflow=5
+    -Wswitch-default
+    -Wundef
+    )
+  string(REPLACE ";" " " MY_CXX_FLAGS "${MY_CXX_FLAGS_LIST}")
 
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
-set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG")
+  if(CI_BUILD)
+  else()
+    set(CMAKE_CXX_FLAGS "-fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow")
+  endif()
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CXX_STD} ${MY_CXX_FLAGS}")
+
+  # Debug/Release
+  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
+  set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG")
+endif()
 
 # Clang/GCC specifics
-if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
-add_subdirectory(src/lib)
-add_subdirectory(src/test)
+add_subdirectory (src/lib)
+add_subdirectory (src/test)
