@@ -25,17 +25,21 @@ git rm new.sh
 
 # Change the project name
 sed -i "s/(skeleton)/($1)/" CMakeLists.txt
+sed -i "s/skeleton/$1/g" appveyor.yml
 git add CMakeLists.txt
+git add appveyor.yml
 
 # Rewrite the README.md
+owner=elbeno
 rm README.md
 echo '# TODO: Fill in this README' >> README.md
 echo '' >> README.md
 echo '### Status' >> README.md
-echo "[![Build Status](https://travis-ci.org/elbeno/$1.svg?branch=master)](https
-://travis-ci.org/elbeno/$1)" >> README.md
+echo "[![Build Status](https://travis-ci.org/$owner/$1.svg?branch=master)](https
+://travis-ci.org/$owner/$1)" >> README.md
+echo "[![Build status](https://ci.appveyor.com/api/projects/status/PROJECT_ID?svg=true)](https://ci.appveyor.com/project/$owner/$1)" >> README.md
 echo '' >> README.md
-echo 'This project is distributed under <some license>. See LICENSE for details.' >> README.md
+echo 'This project is distributed under some license. See LICENSE for details.' >> README.md
 git add README.md
 
 # Fold these changes into the initial commit
