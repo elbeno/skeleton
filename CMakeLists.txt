@@ -10,10 +10,23 @@ include_directories ("${PROJECT_SOURCE_DIR}/contrib/gsl/include")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Default C++ standard: C++14
+# Default C++ standard: C++1z
 if(CXX_STD)
 else()
-  set(CXX_STD 14)
+  set(CXX_STD 1z)
+endif()
+
+# Use a local libc++ if you like...
+# set(USE_LOCAL_LIBCXX true)
+if(LOCAL_LIBCXX_PREFIX)
+else()
+  set(LOCAL_LIBCXX_PREFIX "/usr/local")
+endif()
+if(USE_LOCAL_LIBCXX)
+  add_compile_options(-nostdinc++)
+  include_directories("${LOCAL_LIBCXX_PREFIX}/include/c++/v1")
+  link_directories("${LOCAL_LIBCXX_PREFIX}/lib")
+  set(CMAKE_EXE_LINKER_FLAGS "-stdlib=libc++ -Wl,-rpath,${LOCAL_LIBCXX_PREFIX}/lib")
 endif()
 
 # Set up tests
